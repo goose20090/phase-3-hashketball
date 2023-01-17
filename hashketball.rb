@@ -127,3 +127,86 @@ def game_hash
 end
 
 # Write code here
+
+def get_team_of_player player
+  game_hash[:home][:players].each do | home_player|
+    return "home".to_sym if home_player[:player_name] == player
+  end 
+  game_hash[:away][:players].each do | away_player |
+    return "away".to_sym if away_player[:player_name] == player
+  end
+end
+
+def get_player_hash team, player
+
+  player_hash = game_hash[team][:players].find do |home_player|
+    home_player[:player_name] == player
+  end
+  player_hash
+end
+
+def num_points_scored player
+  team = get_team_of_player(player)
+  player_hash= get_player_hash(team, player)
+  player_hash[:points]
+end
+
+def shoe_size player
+  team = get_team_of_player(player)
+  player_hash = get_player_hash(team, player)
+  player_hash[:shoe]
+end
+
+def team_colors team_name
+  game_hash[get_team_status(team_name).to_sym][:colors]
+end
+
+def team_names
+  team_names_arr = []
+  team_names_arr << game_hash[:home][:team_name]
+  team_names_arr << game_hash[:away][:team_name]
+  team_names_arr
+end
+
+def get_team_status team_name
+  if team_name == "Brooklyn Nets"
+    team_status = "home"
+  elsif team_name == "Charlotte Hornets"
+    team_status = "away"
+  end
+  team_status.to_sym
+end
+
+def player_numbers team_name
+  players_arr = game_hash[get_team_status(team_name)][:players]
+  player_numbers_arr = players_arr.map{|player| player[:number]}
+end
+
+def player_stats player_name
+  get_player_hash(get_team_of_player(player_name), player_name)
+end
+
+def arr_of_all_players
+  arr = []
+  game_hash[:home][:players].each do | player |
+    arr << player
+  end
+  game_hash[:away][:players].each do | player |
+    arr << player
+  end
+  arr
+end
+
+def big_shoe_rebounds 
+  # make arr of all player hashes
+  all_players = arr_of_all_players
+
+  sorted_by_shoe = all_players.sort_by{|player| player[:shoe]}.reverse
+
+  sorted_by_shoe[0][:rebounds]
+end
+
+# num_points_scored("Alan Anderson")
+
+# big_shoe_rebounds
+
